@@ -1,0 +1,8 @@
+# C++ stretching benchmark, one thread; Pixel 5a, Android 14, SM7250, cpu mask 01 (budget column: desktop 10 ms); compiler Android (15422139, +pgo, +bolt, +lto, +mlgo, based on r574158b) Clang 21.0.0 (https://android.googlesource.com/toolchain/llvm-project 9f872551d3c681d06fd303b36f16ed5c274735eb); flags Release -g -DANDROID -fdata-sections -ffunction-sections -funwind-tables -fstack-protector-strong -no-canonical-prefixes -D_FORTIFY_SOURCE=2 -Wformat -Werror=format-security   -O3 -DNDEBUG 
+# check value, 20 zero bytes, C = 2^14: f04a24e8db9c3d750e54d1c0f0224e0da795606a1e0a4af97b20b2015307f94b
+log2_c	c	addresses	mean_ms	median_ms	min_ms	max_ms	ns_per_compression	budget_10ms
+12	4096	200	8.212	8.205	8.168	8.352	1000.8	within
+13	8192	200	16.417	16.393	16.351	18.189	1000.2	over
+14	16384	200	32.820	32.803	32.726	34.519	1000.9	over
+15	32768	200	65.668	65.615	65.481	67.241	1001.1	over
+16	65536	200	131.291	131.243	131.059	133.724	1001.3	over

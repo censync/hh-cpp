@@ -1,0 +1,30 @@
+# Kotlin stretching benchmark, one thread; Pixel 5a, Android 14, SM7250, ART app_process, dex2oat filter speed, cpu mask 80
+# check value, 20 zero bytes, C = 2^14: f04a24e8db9c3d750e54d1c0f0224e0da795606a1e0a4af97b20b2015307f94b
+# first call (cold, C = 2^14): 23.057 ms; warm-up: 30 calls
+log2_c	c	addresses	mean_ms	median_ms	min_ms	max_ms	ns_per_compression
+12	4096	200	5.062	5.057	5.039	5.613	616.8
+13	8192	200	10.111	10.101	10.075	11.052	616.3
+14	16384	200	20.190	20.185	20.155	20.961	615.9
+15	32768	200	40.362	40.353	40.300	41.285	615.7
+16	65536	200	80.719	80.698	80.607	81.810	615.7
+# sink 30
+# Kotlin stretching benchmark, one thread; Pixel 5a, Android 14, SM7250, ART app_process, dex2oat filter speed, cpu mask 40
+# check value, 20 zero bytes, C = 2^14: f04a24e8db9c3d750e54d1c0f0224e0da795606a1e0a4af97b20b2015307f94b
+# first call (cold, C = 2^14): 25.073 ms; warm-up: 30 calls
+log2_c	c	addresses	mean_ms	median_ms	min_ms	max_ms	ns_per_compression
+12	4096	200	5.500	5.498	5.481	5.700	670.7
+13	8192	200	10.984	10.983	10.962	11.048	670.1
+14	16384	200	21.964	21.951	21.918	22.878	669.8
+15	32768	200	43.907	43.894	43.832	44.851	669.7
+16	65536	200	87.797	87.758	87.643	88.939	669.5
+# sink 30
+# Kotlin stretching benchmark, one thread; Pixel 5a, Android 14, SM7250, ART app_process, dex2oat filter speed, cpu mask 01
+# check value, 20 zero bytes, C = 2^14: f04a24e8db9c3d750e54d1c0f0224e0da795606a1e0a4af97b20b2015307f94b
+# first call (cold, C = 2^14): 79.415 ms; warm-up: 30 calls
+log2_c	c	addresses	mean_ms	median_ms	min_ms	max_ms	ns_per_compression
+12	4096	200	17.622	17.608	17.534	19.390	2147.8
+13	8192	200	35.144	35.123	35.037	37.002	2143.0
+14	16384	200	70.222	70.199	70.050	71.795	2141.9
+15	32768	200	140.471	140.392	140.057	143.657	2142.0
+16	65536	200	280.670	280.578	280.114	282.430	2140.5
+# sink 30

@@ -1,0 +1,37 @@
+pair	kind	differing cell
+1	figure kind	row 1 col 1
+2	up-down	row 4 col 1
+3	up-down	row 3 col 3
+4	identical	-
+5	up-down	row 2 col 3
+6	left-right	row 1 col 4
+7	figure kind	row 2 col 3
+8	up-down	row 2 col 3
+9	up-down	row 1 col 3
+10	up-down	row 3 col 3
+11	left-right	row 1 col 2
+12	figure kind	row 1 col 1
+13	up-down	row 2 col 2
+14	left-right	row 4 col 1
+15	up-down	row 4 col 2
+16	identical	-
+17	figure kind	row 4 col 2
+18	left-right	row 2 col 2
+19	left-right	row 4 col 2
+20	left-right	row 4 col 1
+21	left-right	row 1 col 3
+22	identical	-
+23	left-right	row 1 col 3
+24	identical	-
+25	identical	-
+26	left-right	row 4 col 2
+27	up-down	row 3 col 3
+28	figure kind	row 3 col 1
+29	up-down	row 2 col 4
+30	identical	-
+31	up-down	row 4 col 1
+32	left-right	row 2 col 4
+33	left-right	row 1 col 2
+34	left-right	row 4 col 2
+35	up-down	row 1 col 4
+36	figure kind	row 3 col 2

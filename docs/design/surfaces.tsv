@@ -1,0 +1,13 @@
+surface	effective_background	contrast_#7A96C5	contrast_#890AF0	contrast_#C10445	contrast_#D48200	min_palette_contrast	frame	frame_contrast
+white (default)	#FFFFFF	3.00	6.24	6.23	3.00	3.00	#808080	3.95
+transparent on #121212	#121212	6.24	3.00	3.01	6.24	3.00	#808080	4.74
+light grey #F2F2F2	#F2F2F2	2.68	5.57	5.57	2.68	2.68	#808080	3.53
+paper #F4ECD8	#F4ECD8	2.55	5.30	5.29	2.55	2.55	#808080	3.35
+light blue #E3F0FB	#E3F0FB	2.59	5.39	5.38	2.59	2.59	#808080	3.41
+mid grey #9E9E9E	#9E9E9E	1.12	2.33	2.33	1.12	1.12	#808080	1.47
+palette blue #7A96C5	#7A96C5	1.00	2.08	2.08	1.00	1.00	#808080	1.32
+dark navy #0F1B2D	#0F1B2D	5.76	2.77	2.77	5.76	2.77	#808080	4.38
+black #000000	#000000	7.00	3.37	3.37	6.99	3.37	#808080	5.32
+white 50 % on #121212	#898989	1.17	1.78	1.78	1.16	1.16	#808080	1.13
+white, frame at 50 %	#FFFFFF	3.00	6.24	6.23	3.00	3.00	#808080	1.84
+transparent on #121212, frame at 50 %	#121212	6.24	3.00	3.01	6.24	3.00	#808080	2.08

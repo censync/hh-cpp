@@ -1,0 +1,6 @@
+# Line endings are fixed so checkouts are identical on every platform.
+* text=auto eol=lf
+
+# Golden vectors and reference renders are compared byte for byte; git must never rewrite them.
+testdata/** -text
+*.png binary

@@ -1,0 +1,10 @@
+prefix=${pcfiledir}/@HH_PC_PREFIX_FROM_PCDIR@
+libdir=@HH_PC_LIBDIR@
+includedir=@HH_PC_INCLUDEDIR@
+
+Name: hh
+Description: @PROJECT_DESCRIPTION@
+Version: @PROJECT_VERSION@
+Libs: -L${libdir} -lhh
+Libs.private: @HH_PC_LIBS_PRIVATE@
+Cflags: -I${includedir}

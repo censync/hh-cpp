@@ -1,0 +1,27 @@
+# Build trees
+build/
+build-*/
+out/
+cmake-build-*/
+CMakeUserPresets.json
+compile_commands.json
+Testing/
+
+# Editors and local tooling
+.cache/
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+
+# Build products that may land outside a build tree
+*.o
+*.obj
+*.a
+*.lib
+*.so
+*.so.*
+*.dylib
+*.dll
+*.exe

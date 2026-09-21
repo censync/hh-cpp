@@ -1,0 +1,43 @@
+# Figure statistics over 1000000 fingerprints (sha-256 of hh-lab/stats/i), four directions
+item	observed	expected
+figure code none (0)	0.12491	0.12500
+figure code none (1)	0.12501	0.12500
+figure code square	0.12514	0.12500
+figure code circle	0.12488	0.12500
+figure code up	0.12496	0.12500
+figure code right	0.12505	0.12500
+figure code down	0.12491	0.12500
+figure code left	0.12515	0.12500
+colour 0 among filled cells	0.25037	0.25000
+colour 1 among filled cells	0.24993	0.25000
+colour 2 among filled cells	0.24996	0.25000
+colour 3 among filled cells	0.24974	0.25000
+images with 0 empty cells	0.010135	0.010023
+images with 1 empty cells	0.053489	0.053454
+images with 2 empty cells	0.133516	0.133635
+images with 3 empty cells	0.208175	0.207876
+images with 4 empty cells	0.224711	0.225199
+images with 5 empty cells	0.180656	0.180159
+images with 6 empty cells	0.109976	0.110097
+images with 7 empty cells	0.052338	0.052427
+images with 8 empty cells	0.019570	0.019660
+images with 9 empty cells	0.005840	0.005825
+images with 10 empty cells	0.001321	0.001359
+images with 11 empty cells	0.000233	0.000247
+images with 12 empty cells	0.000037	0.000034
+images with 13 empty cells	0.000003	0.000004
+images with 14 empty cells	0.000000	0.000000
+images with 15 empty cells	0.000000	0.000000
+images with 16 empty cells	0.000000	0.000000
+images whose most frequent colour covers 1 cells	0.000010	
+images whose most frequent colour covers 2 cells	0.002201	
+images whose most frequent colour covers 3 cells	0.077359	
+images whose most frequent colour covers 4 cells	0.329029	
+images whose most frequent colour covers 5 cells	0.344387	
+images whose most frequent colour covers 6 cells	0.171059	
+images whose most frequent colour covers 7 cells	0.057412	
+images whose most frequent colour covers 8 cells	0.014959	
+images whose most frequent colour covers 9 cells	0.002989	
+images whose most frequent colour covers 10 cells	0.000525	
+images whose most frequent colour covers 11 cells	0.000064	
+images whose most frequent colour covers 12 cells	0.000006	

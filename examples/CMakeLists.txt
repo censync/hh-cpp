@@ -1,0 +1,6 @@
+foreach(example hh_cli hh_compare)
+    add_executable(${example} ${example}.cpp)
+    target_link_libraries(${example} PRIVATE hh::hh)
+    set_target_properties(${example} PROPERTIES CXX_EXTENSIONS OFF)
+    hh_set_warnings(${example})
+endforeach()

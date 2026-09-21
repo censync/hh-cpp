@@ -1,0 +1,10 @@
+# Kotlin stretching benchmark, one thread; Pixel 5a, Android 14, SM7250, ART app_process, dex2oat filter none, cpu mask 80
+# check value, 20 zero bytes, C = 2^14: f04a24e8db9c3d750e54d1c0f0224e0da795606a1e0a4af97b20b2015307f94b
+# first call (cold, C = 2^14): 590.401 ms; warm-up: 3 calls
+log2_c	c	addresses	mean_ms	median_ms	min_ms	max_ms	ns_per_compression
+12	4096	10	143.690	143.779	142.584	143.910	17538.3
+13	8192	10	286.831	287.427	284.958	287.766	17536.7
+14	16384	10	574.730	575.107	571.428	576.193	17547.7
+15	32768	10	1154.053	1150.237	1145.598	1171.184	17549.6
+16	65536	10	2297.815	2299.029	2288.612	2301.050	17539.4
+# sink 110

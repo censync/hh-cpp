@@ -1,0 +1,29 @@
+# Formatting of hh-cpp.
+Language: Cpp
+BasedOnStyle: Google
+Standard: c++17
+IndentWidth: 4
+ContinuationIndentWidth: 4
+ColumnLimit: 100
+AccessModifierOffset: -4
+NamespaceIndentation: None
+FixNamespaceComments: true
+DerivePointerAlignment: false
+PointerAlignment: Left
+AllowShortFunctionsOnASingleLine: Inline
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLoopsOnASingleLine: false
+AllowShortBlocksOnASingleLine: Never
+AllowShortEnumsOnASingleLine: false
+BreakBeforeBraces: Attach
+SpacesBeforeTrailingComments: 2
+IncludeBlocks: Regroup
+# Main header first, then the standard library, then hh public headers, then local headers.
+IncludeCategories:
+  - Regex: '^<hh/'
+    Priority: 2
+  - Regex: '^<'
+    Priority: 1
+  - Regex: '^"'
+    Priority: 3
+SortIncludes: CaseSensitive

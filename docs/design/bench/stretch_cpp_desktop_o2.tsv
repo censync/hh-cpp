@@ -1,0 +1,8 @@
+# C++ stretching benchmark, one thread; compiler 11.4.0; flags Release  -O2 -DNDEBUG
+# check value, 20 zero bytes, C = 2^14: f04a24e8db9c3d750e54d1c0f0224e0da795606a1e0a4af97b20b2015307f94b
+log2_c	c	addresses	mean_ms	median_ms	min_ms	max_ms	ns_per_compression	budget_10ms
+12	4096	200	1.955	1.963	1.858	2.345	239.5	within
+13	8192	200	3.917	3.937	3.750	4.014	240.2	within
+14	16384	200	7.846	7.857	7.566	8.012	239.7	within
+15	32768	200	15.712	15.782	15.209	16.083	240.8	over
+16	65536	200	31.863	31.908	30.649	32.739	243.4	over
