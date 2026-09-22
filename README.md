@@ -103,6 +103,78 @@ A decision (confirming a payment, verifying a pasted address) should be backed b
 least 64 device-independent pixels, better 96, next to the picture it is compared with. Smaller
 pictures are for recognition in lists.
 
+## A complete program
+
+A command line program that writes the picture of an address to a PNG file and prints its tag.
+CMake fetches hh from this repository; nothing has to be installed first.
+
+`CMakeLists.txt`:
+
+```cmake
+cmake_minimum_required(VERSION 3.16)
+project(hh_example LANGUAGES CXX)
+
+include(FetchContent)
+FetchContent_Declare(hh
+    GIT_REPOSITORY https://github.com/censync/hh-cpp.git
+    GIT_TAG v1.0.0
+)
+FetchContent_MakeAvailable(hh)
+
+add_executable(hh_example main.cpp)
+target_link_libraries(hh_example PRIVATE hh::hh)
+```
+
+`main.cpp`:
+
+```cpp
+#include <cstdint>
+#include <fstream>
+#include <iostream>
+#include <string>
+#include <vector>
+
+#include <hh/hh.hpp>
+
+int main() {
+    hh::base_digest digest;
+    hh::fingerprint fp;
+    hh::image img;
+    std::vector<std::uint8_t> png;
+    hh::error_code ec =
+        hh::make_base_digest_from_hex("0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed", digest);
+    if (ec == hh::error_code::ok) {
+        ec = hh::universal_fingerprint(digest, fp);
+    }
+    if (ec == hh::error_code::ok) {
+        ec = hh::render(fp, 128, hh::render_options{}, img);
+    }
+    if (ec == hh::error_code::ok) {
+        ec = hh::encode_png(img, png);
+    }
+    if (ec != hh::error_code::ok) {
+        std::cerr << hh::error_message(ec) << "\n";
+        return 1;
+    }
+    std::ofstream file("address.png", std::ios::binary);
+    file.write(reinterpret_cast<const char*>(png.data()), static_cast<std::streamsize>(png.size()));
+    const std::string tag = fp.tag();
+    std::cout << tag.substr(0, 3) << "-" << tag.substr(3) << "\n";
+    return file ? 0 : 1;
+}
+```
+
+```sh
+cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
+cmake --build build
+./build/hh_example
+```
+
+The program prints `TKS-PVH` and writes `address.png`, byte for byte the file
+`testdata/golden/evm-1-universal-128.png` that every implementation reproduces. With hh installed
+(see Building), `find_package(hh 1.0 REQUIRED)` replaces everything from `include(FetchContent)` to
+`FetchContent_MakeAvailable(hh)`.
+
 ## Building
 
 A C++17 compiler and CMake 3.16 or newer; nothing else.
