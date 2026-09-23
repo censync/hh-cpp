@@ -13,16 +13,21 @@ people with a colour vision deficiency can tell them apart as well.
 The two addresses agree in their first and last eight hex digits. Their pictures are unrelated.
 
 This repository is the C++17 reference implementation. It owns the specification
-([docs/SPEC.md](docs/SPEC.md)) and the golden vectors (`testdata/`). Every implementation
-produces the same bytes and carries a copy of the vectors:
+([docs/SPEC.md](docs/SPEC.md)) and the golden vectors (`testdata/`) that every implementation
+reproduces.
 
-| Language | Repository | Package |
-|---|---|---|
-| C++17, C ABI (reference) | [hh-cpp](https://github.com/censync/hh-cpp) | CMake `hh::hh`, pkg-config `hh` |
-| Kotlin: JVM, Android | [hh-kotlin](https://github.com/censync/hh-kotlin) | Maven `io.github.censync:hh` |
-| TypeScript: browsers, Node.js | [hh-ts](https://github.com/censync/hh-ts) | npm `@censync/hh` |
-| Go | [go-hh](https://github.com/censync/go-hh) | `github.com/censync/go-hh` |
-| Python | [hh-python](https://github.com/censync/hh-python) | PyPI `humanized-hash` |
+## Implementations
+
+Every implementation produces the same pictures, tags and encoded files, byte for byte, and its
+tests check it against a copy of the golden vectors of hh-cpp.
+
+| Language | Repository | Package | Install |
+|---|---|---|---|
+| C++17, C ABI | hh-cpp (this repository), the reference: specification and golden vectors | CMake `hh::hh`, pkg-config `hh` ([releases](https://github.com/censync/hh-cpp/releases)) | CMake `FetchContent` or `find_package(hh)` |
+| Kotlin and Java: JVM, Android | [hh-kotlin](https://github.com/censync/hh-kotlin) | Maven Central [`io.github.censync:hh`](https://central.sonatype.com/artifact/io.github.censync/hh) | `implementation("io.github.censync:hh:1.0.0")` |
+| TypeScript and JavaScript: browsers, Node.js, Deno, Bun | [hh-ts](https://github.com/censync/hh-ts) | npm [`@censync/hh`](https://www.npmjs.com/package/@censync/hh) | `npm install @censync/hh` |
+| Go | [go-hh](https://github.com/censync/go-hh) | [`github.com/censync/go-hh`](https://pkg.go.dev/github.com/censync/go-hh) | `go get github.com/censync/go-hh` |
+| Python | [hh-python](https://github.com/censync/hh-python) | PyPI [`humanized-hash`](https://pypi.org/project/humanized-hash/) | `pip install humanized-hash` |
 
 ## A longer example: Sui
 
