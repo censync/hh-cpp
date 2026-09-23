@@ -84,6 +84,30 @@ evidence rather than proof; the tag or the full address is the check that is cer
   of 3:1 on white and on dark surfaces. Shape carries most of the information, so a picture still
   works in greyscale ([docs/design](docs/design) has the measurements and the simulated sheets).
 
+## Where it is used
+
+hh answers one question: is this the same address as the one I mean? Wherever a person has to
+answer it from a long string, a picture answers it faster and more reliably than the first and
+last characters do.
+
+- **Sending and confirming.** The picture of the recipient stands next to the address field and on
+  the confirmation screen. A swapped or mistyped address changes it completely.
+- **Address books and account lists.** Every saved payee and every account of the user carries its
+  picture, so a list is scanned instead of read; 32 to 48 px is enough for recognition.
+- **Two devices of one user.** An offline signer and the online device show the same picture for
+  the same address, so the two screens are compared at a glance instead of 64 characters.
+- **Support, screenshots and voice.** The six-character tag (`TKS-PVH`) travels through chat and
+  over the phone; the picture travels in a screenshot.
+- **Documents and messages from a server.** The encoders return PNG, BMP or JPEG bytes, so a
+  backend puts the picture into a receipt, an invoice or an email without a graphics library.
+- **Anything that is a hash, not only an address.** An SSH or PGP key fingerprint, a TLS
+  certificate pin, an API key, the checksum of a backup or of a firmware image.
+
+Three rules keep it honest: the picture complements the text check and never replaces it; inside
+one application keyed pictures are the default and universal pictures are what is shared with
+others; a picture that backs a decision is at least 64 dp and stands beside the picture it is
+compared with. [docs/INTEGRATION.md](docs/INTEGRATION.md) has the rest.
+
 ## Quick start
 
 ```cpp
@@ -107,6 +131,40 @@ std::string tag = fp.tag();                   // "TKSPVH", shown as TKS-PVH: a c
 A decision (confirming a payment, verifying a pasted address) should be backed by a picture of at
 least 64 device-independent pixels, better 96, next to the picture it is compared with. Smaller
 pictures are for recognition in lists.
+
+## Looks
+
+The cells, the palette and the geometry are fixed; the host chooses the shape, the background and,
+for a keyed picture, the marker. Every picture below is the address of the quick start,
+rendered at 128 px.
+
+| Shape | Opaque white | Light blue `E8EEF7` | Transparent | Keyed, transparent |
+|---|---|---|---|---|
+| Square | ![square on white](docs/images/look-square-white.png) | ![square on light blue](docs/images/look-square-blue.png) | ![square on a transparent background](docs/images/look-square-transparent.png) | ![keyed square with rounded corners](docs/images/look-square-keyed.png) |
+| Round | ![round on white](docs/images/look-round-white.png) | ![round on light blue](docs/images/look-round-blue.png) | ![round on a transparent background](docs/images/look-round-transparent.png) | ![keyed round with ticks](docs/images/look-round-keyed.png) |
+
+- **Background.** Any colour with any transparency. Outside rounded corners and outside the disc
+  the picture is transparent anyway, so a transparent background takes whatever is behind it: the
+  two transparent columns above are the same bytes on a light page and on a dark one.
+- **Contrast.** An opaque background is refused below 2:1 against a palette colour, and the
+  contrast report gives the WCAG ratio so that a host can warn below 3:1. White scores 300, the
+  light blue above 257, `121212` scores 300; mid greys and saturated surfaces are what to avoid.
+- **The frame marks the mode.** A universal picture has no frame by default, a keyed square gets
+  rounded corners, and the round shape stays unmarked unless a style is asked for (ticks above).
+  Pick one style and keep it everywhere in an application.
+- **The round shape** inscribes the same grid in a circle, so its cells are about a third smaller;
+  give it a third more pixels.
+
+```cpp
+hh::render_options options;
+options.shape = hh::image_shape::round;
+options.background = {0xE8, 0xEE, 0xF7};
+options.background_alpha = 0;             // transparent; the colour then does not matter
+options.frame = hh::frame_style::ticks;   // a marker: keyed pictures only
+
+const hh::contrast_report report = hh::measure_contrast(options, {255, 255, 255});
+if (report.figures_x100 < 300) { /* warn */ }
+```
 
 ## A complete program
 
