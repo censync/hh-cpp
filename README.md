@@ -236,7 +236,7 @@ cmake --build build
 
 The program prints `TKS-PVH` and writes `address.png`, byte for byte the file
 `testdata/golden/evm-1-universal-128.png` that every implementation reproduces. With hh installed
-(see Building), `find_package(hh 1.0 REQUIRED)` replaces everything from `include(FetchContent)` to
+(see Building), `find_package(hh 1.1 REQUIRED)` replaces everything from `include(FetchContent)` to
 `FetchContent_MakeAvailable(hh)`.
 
 ## Building
@@ -254,7 +254,7 @@ cmake --install build --prefix /usr/local
 multi-configuration generator such as Visual Studio add `--config Release` to the build and
 install commands and `-C Release` to `ctest`.
 
-Use it from CMake with `find_package(hh 1.0 REQUIRED)` and `target_link_libraries(app PRIVATE
+Use it from CMake with `find_package(hh 1.1 REQUIRED)` and `target_link_libraries(app PRIVATE
 hh::hh)`, from a source tree with `add_subdirectory`, or through `pkg-config --cflags --libs hh`.
 The library is static unless `BUILD_SHARED_LIBS` is set.
 
