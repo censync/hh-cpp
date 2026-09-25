@@ -54,7 +54,7 @@ int hh_test_c_api(void) {
     int i;
 
     failures = 0;
-    CHECK(strcmp(hh_version(), "1.0.0") == 0);
+    CHECK(strcmp(hh_version(), "1.1.0") == 0);
     CHECK(strcmp(hh_error_name(HH_INVALID_HEX), "invalid_hex") == 0);
     CHECK(strlen(hh_error_message(HH_LOW_CONTRAST)) > 0);
     CHECK(strcmp(hh_error_name(12345), "unknown") == 0);
@@ -104,9 +104,12 @@ int hh_test_c_api(void) {
     }
     CHECK(hh_render(fp, HH_MODE_UNIVERSAL, 64, NULL, rgba, bytes) == HH_OK);
     CHECK(hh_render(fp, HH_MODE_UNIVERSAL, 64, &options, rgba, bytes - 1) == HH_BUFFER_TOO_SMALL);
-    options.frame = HH_FRAME_THICK;
-    CHECK(hh_render(fp, HH_MODE_UNIVERSAL, 64, &options, rgba, bytes) == HH_INVALID_FRAME);
+    options.frame = HH_FRAME_THICK; /* every style that fits the shape, in either mode */
+    CHECK(hh_render(fp, HH_MODE_UNIVERSAL, 64, &options, rgba, bytes) == HH_OK);
     CHECK(hh_render(fp, HH_MODE_KEYED, 64, &options, rgba, bytes) == HH_OK);
+    options.frame = HH_FRAME_TICKS; /* the round shape only */
+    CHECK(hh_render(fp, HH_MODE_UNIVERSAL, 64, &options, rgba, bytes) == HH_INVALID_FRAME);
+    CHECK(hh_render(fp, HH_MODE_KEYED, 64, &options, rgba, bytes) == HH_INVALID_FRAME);
     options.frame = 99;
     CHECK(hh_render(fp, HH_MODE_KEYED, 64, &options, rgba, bytes) == HH_INVALID_ARGUMENT);
     hh_render_options_init(&options);

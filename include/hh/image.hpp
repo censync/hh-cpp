@@ -25,9 +25,10 @@ enum class image_shape : std::uint8_t {
     round = 1,  // the 4 x 4 grid inscribed in a circle, no cell clipped
 };
 
-// `none` and `plain` are available in both modes. Every other style is a
-// keyed-mode marker: it tells the user that the picture is the private one,
-// and render() refuses it for a universal fingerprint.
+// Every style is available in both modes; `rounded`, `chamfered` and
+// `brackets` need the square shape, `ticks` and `gaps` the round one. A host
+// that marks its keyed pictures with a frame picks the style; `automatic`
+// gives keyed square pictures rounded corners.
 enum class frame_style : std::uint8_t {
     automatic = 0,  // keyed and square: rounded; otherwise none
     none = 1,

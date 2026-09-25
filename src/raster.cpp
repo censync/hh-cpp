@@ -199,21 +199,20 @@ frame_style resolve_frame(frame_style style, mode m, image_shape shape) noexcept
                                                               : frame_style::none;
 }
 
-bool frame_allowed(frame_style resolved, mode m, image_shape shape) noexcept {
+bool frame_allowed(frame_style resolved, image_shape shape) noexcept {
     switch (resolved) {
         case frame_style::none:
         case frame_style::plain:
+        case frame_style::double_line:
+        case frame_style::thick:
             return true;
         case frame_style::rounded:
         case frame_style::chamfered:
         case frame_style::brackets:
-            return m == mode::keyed && shape == image_shape::square;
-        case frame_style::double_line:
-        case frame_style::thick:
-            return m == mode::keyed;
+            return shape == image_shape::square;
         case frame_style::ticks:
         case frame_style::gaps:
-            return m == mode::keyed && shape == image_shape::round;
+            return shape == image_shape::round;
         case frame_style::automatic:
             return false;
     }
@@ -349,7 +348,7 @@ error_code prepare(const fingerprint& fp, std::uint32_t size, const render_optio
         return error_code::invalid_size;
     }
     const frame_style resolved = detail::resolve_frame(options.frame, fp.mode(), options.shape);
-    if (!detail::frame_allowed(resolved, fp.mode(), options.shape)) {
+    if (!detail::frame_allowed(resolved, options.shape)) {
         return error_code::invalid_frame;
     }
     if (options.background_alpha == 255 &&

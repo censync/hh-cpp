@@ -72,8 +72,9 @@ Comparing a keyed picture with a universal one always fails, which a user reads 
 was replaced". Hosts keep the modes apart:
 
 - one picture per address per screen, with a caption that names the mode in words;
-- keyed pictures carry a frame marker by default in the square shape; exported or shared pictures
-  are always universal;
+- keyed pictures carry a frame marker by default in the square shape; every frame style is open
+  to both modes, so a frame is a hint the host chooses, never proof of the mode; exported or
+  shared pictures are always universal;
 - mode confusion can only produce a false alarm, never a false match: the two fingerprints of one
   input are unrelated.
 

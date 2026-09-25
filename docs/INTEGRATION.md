@@ -64,10 +64,12 @@ input --make_base_digest--> base digest --*_fingerprint--> fingerprint --render-
 
 - `shape`: `square` (default) or `round` (the grid inscribed in a circle).
 - `frame`: `automatic` gives universal pictures no frame and keyed square pictures rounded
-  corners. `none` and `plain` are open to both modes; `rounded`, `chamfered`, `double_line`,
-  `thick`, `brackets` (square) and `double_line`, `thick`, `ticks`, `gaps` (round) mark a keyed
-  picture and are refused for a universal fingerprint. Use one style everywhere in an
-  application and on every device of a user: the marker is only useful if it is familiar.
+  corners. Every style is open to both modes: `none`, `plain`, `double_line` and `thick` fit
+  either shape, `rounded`, `chamfered` and `brackets` the square, `ticks` and `gaps` the round
+  shape; a style that does not fit the shape is `invalid_frame`. A host that marks its keyed
+  pictures with a frame uses one style everywhere in the application and on every device of a
+  user: a marker is only useful if it is familiar. The library does not enforce the marker, so
+  the caption, not the frame, is what tells the user the mode.
 - The round shape has no marker by default, so there the caption alone names the mode.
 - `background` and `background_alpha`: any colour, from transparent to opaque. Outside rounded
   or chamfered corners and outside the disc the picture is always transparent.

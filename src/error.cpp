@@ -22,7 +22,7 @@ const char* error_message(error_code code) noexcept {
         case error_code::invalid_size:
             return "the image size must be 16..1024 and leave room for the cells";
         case error_code::invalid_frame:
-            return "the frame style is not allowed for this shape or mode";
+            return "the frame style does not fit the shape";
         case error_code::low_contrast:
             return "the background is too close to a palette colour";
         case error_code::invalid_quality:

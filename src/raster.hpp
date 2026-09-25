@@ -27,8 +27,8 @@ struct geometry {
 // `automatic` resolved for the mode and the shape; other styles unchanged.
 frame_style resolve_frame(frame_style style, mode m, image_shape shape) noexcept;
 
-// Whether a resolved style may be used with the shape and the mode.
-bool frame_allowed(frame_style resolved, mode m, image_shape shape) noexcept;
+// Whether a resolved style may be used with the shape. The mode plays no part.
+bool frame_allowed(frame_style resolved, image_shape shape) noexcept;
 
 // False if the size leaves no room for the cells (t = 0).
 bool make_geometry(std::uint32_t size, image_shape shape, frame_style resolved,

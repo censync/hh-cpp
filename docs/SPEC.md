@@ -156,20 +156,21 @@ A render takes a fingerprint, a size `S` and these options:
 
 `automatic` resolves to `rounded` for a keyed fingerprint with the square shape and to `none`
 otherwise. `none` draws no frame; `plain` draws the plain frame of the shape (a thin square or a
-thin ring). Every other style is a keyed-mode marker: it tells a user that the picture is the
-private one.
+thin ring); the other styles draw the frames of section 8.4. The mode never restricts the look:
+every style that fits the shape is available to universal and keyed fingerprints alike, and
+which style marks which mode is the host's choice.
 
-| Style | Square | Round | Universal | Keyed |
-|---|---|---|---|---|
-| `none`, `plain` | yes | yes | yes | yes |
-| `rounded`, `chamfered`, `brackets` | yes | no | no | yes |
-| `double`, `thick` | yes | yes | no | yes |
-| `ticks`, `gaps` | no | yes | no | yes |
+| Style | Square | Round |
+|---|---|---|
+| `none`, `plain` | yes | yes |
+| `rounded`, `chamfered`, `brackets` | yes | no |
+| `double`, `thick` | yes | yes |
+| `ticks`, `gaps` | no | yes |
 
 A render fails, in this order of checks, with:
 
 1. `invalid_size` unless 16 <= `S` <= 1024;
-2. `invalid_frame` if the resolved style is not allowed for the shape or for the mode;
+2. `invalid_frame` if the resolved style is not allowed for the shape;
 3. `low_contrast` if `ab` = 255 and the figure contrast of section 9 against `B` is below 200
    (that is, below 2:1);
 4. `invalid_size` if the cell size `t` of section 7 is 0 (round shape with `double` or `thick`
@@ -527,7 +528,7 @@ as in T.81 annex C:
 | 5 | `invalid_digest` | the base digest is not 32 bytes or is unset |
 | 6 | `invalid_fingerprint` | the fingerprint is not 32 bytes, has an unknown mode or is unset |
 | 7 | `invalid_size` | the size is outside 16..1024 or leaves no room for the cells |
-| 8 | `invalid_frame` | the frame style is not allowed for the shape or the mode |
+| 8 | `invalid_frame` | the frame style is not allowed for the shape |
 | 9 | `low_contrast` | the opaque background is too close to a palette colour |
 | 10 | `invalid_quality` | the JPEG quality is outside 50..100 |
 | 11 | `invalid_image` | the image dimensions or its buffer length are invalid |

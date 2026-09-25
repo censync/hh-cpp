@@ -5,6 +5,19 @@ All notable changes to this project are documented here. The format follows
 [Semantic Versioning](https://semver.org/spec/v2.0.0.html). The algorithm itself is frozen and
 has no version: no release changes a fingerprint, a pixel or an encoded byte.
 
+## [1.1.0] - 2026-09-25
+
+### Changed
+
+- The mode no longer restricts the look: universal fingerprints take every frame style that fits
+  the shape (`rounded`, `chamfered`, `double`, `thick`, `brackets`, `ticks`, `gaps`), which 1.0.0
+  refused with `invalid_frame`. A style that does not fit the shape is still `invalid_frame`.
+  `automatic` is unchanged: universal pictures stay frameless and keyed square pictures keep
+  their rounded corners, so every picture 1.0.0 rendered is the same to the byte.
+- `docs/SPEC.md` section 6 and the golden vectors: the mode column of the frame table is gone;
+  the vectors gain renders and size sweeps of universal fingerprints with every style, and the
+  error records now test the shape alone.
+
 ## [1.0.0] - 2026-09-21
 
 The first release, and the freeze of the algorithm.
@@ -35,4 +48,5 @@ The first release, and the freeze of the algorithm.
 - Design lab `tools/lab` (`-DHH_BUILD_LAB=ON`, never installed): palette gate, contact sheets,
   frame markers, host surfaces, lookalike grinding, direction sheets, stretching benchmark.
 
+[1.1.0]: https://github.com/censync/hh-cpp/releases/tag/v1.1.0
 [1.0.0]: https://github.com/censync/hh-cpp/releases/tag/v1.0.0

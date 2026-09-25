@@ -493,6 +493,16 @@ void generate() {
     }
     render_record(evm2.universal, 48, with(image_shape::square, frame_style::plain));
     render_record(evm2.universal, 128, with(image_shape::square, frame_style::plain));
+    // The mode does not restrict the look: universal fingerprints take every style of the shape.
+    for (frame_style style :
+         {frame_style::rounded, frame_style::chamfered, frame_style::double_line,
+          frame_style::thick, frame_style::brackets}) {
+        render_record(evm2.universal, 64, with(image_shape::square, style));
+    }
+    for (frame_style style :
+         {frame_style::double_line, frame_style::thick, frame_style::ticks, frame_style::gaps}) {
+        render_record(evm2.universal, 64, with(image_shape::round, style));
+    }
     render_record(evm2.universal, 64, with(image_shape::round, frame_style::none));
     render_record(evm2.universal, 128, with(image_shape::round, frame_style::plain));
     render_record(evm2.keyed, 1024, with(image_shape::round, frame_style::ticks, "00000000"));
@@ -541,23 +551,15 @@ void generate() {
     for (std::uint32_t size : {0u, 15u, 1025u, 4096u}) {
         error_record(evm1.universal, size, look{}, error_code::invalid_size);
     }
-    for (frame_style style :
-         {frame_style::rounded, frame_style::chamfered, frame_style::double_line,
-          frame_style::thick, frame_style::brackets}) {
-        error_record(evm1.universal, 64, with(image_shape::square, style),
-                     error_code::invalid_frame);
-    }
-    for (frame_style style :
-         {frame_style::double_line, frame_style::thick, frame_style::ticks, frame_style::gaps}) {
-        error_record(evm1.universal, 64, with(image_shape::round, style),
-                     error_code::invalid_frame);
-    }
-    for (frame_style style : {frame_style::ticks, frame_style::gaps}) {
-        error_record(evm1.keyed, 64, with(image_shape::square, style), error_code::invalid_frame);
-    }
-    for (frame_style style :
-         {frame_style::rounded, frame_style::chamfered, frame_style::brackets}) {
-        error_record(evm1.keyed, 64, with(image_shape::round, style), error_code::invalid_frame);
+    // A style that does not fit the shape, in either mode.
+    for (const hh::fingerprint* fp : {&evm1.universal, &evm1.keyed}) {
+        for (frame_style style : {frame_style::ticks, frame_style::gaps}) {
+            error_record(*fp, 64, with(image_shape::square, style), error_code::invalid_frame);
+        }
+        for (frame_style style :
+             {frame_style::rounded, frame_style::chamfered, frame_style::brackets}) {
+            error_record(*fp, 64, with(image_shape::round, style), error_code::invalid_frame);
+        }
     }
     for (const char* background :
          {"9e9e9eff", "7a96c5ff", "890af0ff", "c10445ff", "d48200ff", "808080ff"}) {
@@ -572,8 +574,10 @@ void generate() {
     // The order of the checks: size, then frame, then contrast, then the room for the cells.
     error_record(evm1.universal, 15, with(image_shape::square, frame_style::thick, "9e9e9eff"),
                  error_code::invalid_size);
-    error_record(evm1.universal, 64, with(image_shape::square, frame_style::thick, "9e9e9eff"),
+    error_record(evm1.universal, 64, with(image_shape::square, frame_style::ticks, "9e9e9eff"),
                  error_code::invalid_frame);
+    error_record(evm1.universal, 64, with(image_shape::square, frame_style::thick, "9e9e9eff"),
+                 error_code::low_contrast);
     error_record(evm1.keyed, 16, with(image_shape::round, frame_style::thick, "9e9e9eff"),
                  error_code::low_contrast);
 
@@ -595,6 +599,9 @@ void generate() {
     for (frame_style style : {frame_style::double_line, frame_style::thick}) {
         sweep_record(evm2.keyed, with(image_shape::round, style, veil, 200), 18, 160);
     }
+    sweep_record(evm2.universal, with(image_shape::square, frame_style::rounded, veil, 200), 16,
+                 160);
+    sweep_record(evm2.universal, with(image_shape::round, frame_style::ticks, veil, 200), 16, 160);
 
     // ---- I ----
     tsv << "# I\tid\twidth\theight\tpattern\tquality\tmatte\tsha256 rgba\tsha256 png\tsha256 bmp"

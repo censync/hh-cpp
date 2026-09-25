@@ -288,25 +288,52 @@ TEST_CASE("raster: rounded corners never reach beyond the middle of a side") {
     }
 }
 
-TEST_CASE("raster: marker styles belong to keyed mode and to their shape") {
+TEST_CASE("raster: every style fits its shape in both modes") {
     const auto universal = fingerprint_of(sampler_bytes(), hh::mode::universal);
     const auto keyed = fingerprint_of(sampler_bytes(), hh::mode::keyed);
     hh::image img;
     for (int round = 0; round < 2; ++round) {
-        for (int style = 0; style <= 9; ++style) {
+        for (int style = 1; style <= 9; ++style) {
             hh::render_options options;
             options.shape = round ? image_shape::round : image_shape::square;
             options.frame = static_cast<frame_style>(style);
-            const bool marker = style >= 3;
             const bool square_only = style == 3 || style == 4 || style == 7;
             const bool round_only = style == 8 || style == 9;
             const bool fits = !(round && square_only) && !(!round && round_only);
-            EXPECT_EQ(hh::render(universal, 64, options, img),
-                      marker ? error_code::invalid_frame : error_code::ok);
-            EXPECT_EQ(hh::render(keyed, 64, options, img),
-                      fits ? error_code::ok : error_code::invalid_frame);
+            const error_code expected = fits ? error_code::ok : error_code::invalid_frame;
+            EXPECT_EQ(hh::render(universal, 64, options, img), expected);
+            EXPECT_EQ(hh::render(keyed, 64, options, img), expected);
         }
     }
+}
+
+TEST_CASE("raster: an explicit frame draws the same for both modes") {
+    // The frame depends on the style and the shape alone: two fingerprints with the same bytes
+    // and different modes give identical pictures for every explicit style.
+    const auto universal = fingerprint_of(sampler_bytes(), hh::mode::universal);
+    const auto keyed = fingerprint_of(sampler_bytes(), hh::mode::keyed);
+    for (int round = 0; round < 2; ++round) {
+        for (int style = 1; style <= 9; ++style) {
+            hh::render_options options;
+            options.shape = round ? image_shape::round : image_shape::square;
+            options.frame = static_cast<frame_style>(style);
+            hh::image a;
+            hh::image b;
+            const error_code ea = hh::render(universal, 80, options, a);
+            const error_code eb = hh::render(keyed, 80, options, b);
+            EXPECT_EQ(ea, eb);
+            EXPECT_TRUE(a.rgba == b.rgba);
+        }
+    }
+    // Only `automatic` depends on the mode: keyed square pictures get rounded corners.
+    hh::render_options automatic;
+    hh::render_options rounded;
+    rounded.frame = frame_style::rounded;
+    hh::image k_auto;
+    hh::image u_rounded;
+    EXPECT_EQ(hh::render(keyed, 80, automatic, k_auto), error_code::ok);
+    EXPECT_EQ(hh::render(universal, 80, rounded, u_rounded), error_code::ok);
+    EXPECT_TRUE(k_auto.rgba == u_rounded.rgba);
 }
 
 TEST_CASE("raster: a marker changes the frame and nothing else") {
@@ -341,13 +368,16 @@ TEST_CASE("raster: errors come in the specified order") {
     const auto universal = fingerprint_of(sampler_bytes(), hh::mode::universal);
     const auto keyed = fingerprint_of(sampler_bytes(), hh::mode::keyed);
     hh::image img;
-    hh::render_options bad;  // wrong frame for the mode and a background without contrast
-    bad.frame = frame_style::thick;
+    hh::render_options bad;  // wrong frame for the shape and a background without contrast
+    bad.frame = frame_style::ticks;
     bad.background = {0x7A, 0x96, 0xC5};
     EXPECT_EQ(hh::render(hh::fingerprint{}, 64, bad, img), error_code::invalid_fingerprint);
     EXPECT_EQ(hh::render(universal, 15, bad, img), error_code::invalid_size);
     EXPECT_EQ(hh::render(universal, 1025, bad, img), error_code::invalid_size);
     EXPECT_EQ(hh::render(universal, 64, bad, img), error_code::invalid_frame);
+    EXPECT_EQ(hh::render(keyed, 64, bad, img), error_code::invalid_frame);
+    bad.frame = frame_style::thick;
+    EXPECT_EQ(hh::render(universal, 64, bad, img), error_code::low_contrast);
     EXPECT_EQ(hh::render(keyed, 64, bad, img), error_code::low_contrast);
     EXPECT_TRUE(img.rgba.empty());
     EXPECT_EQ(img.width, 0u);

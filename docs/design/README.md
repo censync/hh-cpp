@@ -13,7 +13,7 @@ renders. Nothing in this directory is normative; `docs/SPEC.md` is.
 | Palette | `7A96C5`, `890AF0`, `C10445`, `D48200`: picked by eye from the candidate sheets, then tuned within 12 CAM02-UCS units to pass the gate | `palette_picked.png`, `palette_gate.tsv` |
 | Triangle directions | four: even if left and right were never told apart, a cell keeps 2.5 bits of figure against 2.25 with two directions | `directions_64px_*`, `directions_key.tsv` |
 | Shape | square by default; round as an option, the grid inscribed in the circle, no cell clipped | `markers_round_sizes.png`, `round_geometry.tsv` |
-| Mode marker | universal pictures have no frame by default; keyed pictures carry a marker, rounded corners by default for the square; the round shape has none by default; the host chooses among the styles | `markers_sizes.png`, `markers_list_*`, `markers_round_*` |
+| Mode marker | universal pictures have no frame by default; keyed pictures carry a marker, rounded corners by default for the square; the round shape has none by default; since 1.1.0 every style is open to both modes and the host decides which style marks which mode | `markers_sizes.png`, `markers_list_*`, `markers_round_*` |
 | Background | the host may set its colour and transparency and the transparency of the frame; opaque backgrounds below 2:1 against a palette colour are refused | `surfaces.png`, `surfaces.tsv` |
 | Stretching | 16 384 PBKDF2 iterations | `bench/` |
 
