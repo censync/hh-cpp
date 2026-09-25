@@ -21,6 +21,133 @@ Independent hosts agree on the picture only if they agree on the bytes:
 The chain is deliberately not mixed in: one EVM address is one identity on every EVM chain. A
 binary input and a text input with the same bytes give different pictures.
 
+### Addresses that are text
+
+The table asks for bytes wherever one address has several spellings. The functions below turn
+the usual spellings into those bytes. They check the form and the checksum, not whether the
+address exists or whose it is, and they are not part of the library, which takes any bytes and
+any text: copy them into the application.
+
+- TON: every spelling of one account (bounceable `EQ...`, non-bounceable `UQ...`, base64 or
+  base64url, raw `0:...`) gives the same 36 bytes and so the same picture. Hashed as text, the
+  four spellings would give four unrelated pictures.
+- Bitcoin: a bech32 address may be written in capitals, as QR codes do; both spellings give one
+  picture. Base58 addresses are case-sensitive and pass unchanged.
+- Free text (a name, an e-mail address, a label a person types) is hashed exactly as given, so
+  case, spaces and the Unicode form all count: an accented letter typed as one character (U+00E9)
+  and as a letter and a combining accent (U+0065 U+0301) gives two different pictures. Normalise
+  text a person types to NFC first; what to do about case and spaces is the application's choice.
+
+```cpp
+#include <algorithm>
+#include <array>
+#include <cstdint>
+#include <optional>
+#include <string>
+#include <string_view>
+
+// TON: the canonical 36 bytes (the workchain as 4 bytes big-endian, then the 32-byte account
+// hash) from a user-friendly address (48 characters of base64 or base64url, any flags) or a raw
+// one ("0:" or "-1:" and 64 hex digits). Nothing for anything else or for a wrong checksum.
+std::optional<std::array<std::uint8_t, 36>> ton_address_bytes(std::string_view text) {
+    auto digit = [](char c, int base) -> int {
+        const char* digits =
+            base == 16 ? "0123456789abcdef"
+                       : "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+        if (base == 16 && c >= 'A' && c <= 'F')
+            c = static_cast<char>(c - 'A' + 'a');
+        if (base == 64 && c == '-')
+            c = '+';
+        if (base == 64 && c == '_')
+            c = '/';
+        const char* p = std::find(digits, digits + base, c);
+        return p == digits + base ? -1 : static_cast<int>(p - digits);
+    };
+    std::array<std::uint8_t, 36> out{};
+    auto put_workchain = [&out](std::int32_t workchain) {
+        const auto w = static_cast<std::uint32_t>(workchain);
+        for (int i = 0; i < 4; ++i)
+            out[static_cast<std::size_t>(i)] = static_cast<std::uint8_t>(w >> (24 - 8 * i));
+    };
+    const std::size_t colon = text.find(':');
+    if (colon != std::string_view::npos) {
+        const std::string_view workchain = text.substr(0, colon);
+        const std::string_view hash = text.substr(colon + 1);
+        if ((workchain != "0" && workchain != "-1") || hash.size() != 64)
+            return std::nullopt;
+        for (std::size_t i = 0; i < 32; ++i) {
+            const int hi = digit(hash[2 * i], 16);
+            const int lo = digit(hash[2 * i + 1], 16);
+            if (hi < 0 || lo < 0)
+                return std::nullopt;
+            out[4 + i] = static_cast<std::uint8_t>(hi * 16 + lo);
+        }
+        put_workchain(workchain == "0" ? 0 : -1);
+        return out;
+    }
+    if (text.size() != 48)
+        return std::nullopt;
+    std::array<std::uint8_t, 36> raw{};  // flags, workchain, account hash, CRC-16
+    std::uint32_t bits = 0;
+    int held = 0;
+    std::size_t n = 0;
+    for (const char c : text) {
+        const int v = digit(c, 64);
+        if (v < 0)
+            return std::nullopt;
+        bits = (bits << 6) | static_cast<std::uint32_t>(v);
+        held += 6;
+        if (held >= 8) {
+            held -= 8;
+            raw[n++] = static_cast<std::uint8_t>(bits >> held);
+        }
+    }
+    std::uint32_t crc = 0;  // CRC-16/XMODEM over flags, workchain and hash
+    for (std::size_t i = 0; i < 34; ++i) {
+        crc ^= static_cast<std::uint32_t>(raw[i]) << 8;
+        for (int k = 0; k < 8; ++k)
+            crc = (crc & 0x8000u) ? ((crc << 1) ^ 0x1021u) & 0xFFFFu : (crc << 1) & 0xFFFFu;
+    }
+    if (crc != ((static_cast<std::uint32_t>(raw[34]) << 8) | raw[35]))
+        return std::nullopt;
+    put_workchain(static_cast<std::int8_t>(raw[1]));
+    std::copy(raw.begin() + 2, raw.begin() + 34, out.begin() + 4);
+    return out;
+}
+
+// Bitcoin: bech32 and bech32m addresses (bc1, tb1, bcrt1) are case-insensitive and are hashed
+// in lower case; one in mixed case is invalid. Base58 addresses are hashed as they are written.
+std::optional<std::string> bitcoin_address_text(const std::string& text) {
+    std::string lower = text;
+    std::string upper = text;
+    for (char& c : lower)
+        c = (c >= 'A' && c <= 'Z') ? static_cast<char>(c - 'A' + 'a') : c;
+    for (char& c : upper)
+        c = (c >= 'a' && c <= 'z') ? static_cast<char>(c - 'a' + 'A') : c;
+    const bool bech32 =
+        lower.rfind("bc1", 0) == 0 || lower.rfind("tb1", 0) == 0 || lower.rfind("bcrt1", 0) == 0;
+    if (!bech32)
+        return text;
+    if (text != lower && text != upper)
+        return std::nullopt;
+    return lower;
+}
+```
+
+```cpp
+hh::base_digest digest;
+if (const auto bytes = ton_address_bytes(ton_address)) {
+    ec = hh::make_base_digest({bytes->data(), bytes->size()}, digest);
+}
+if (const auto text = bitcoin_address_text(bitcoin_address)) {
+    ec = hh::make_base_digest_from_text(*text, digest);
+}
+```
+
+The C++ standard library has no Unicode normaliser. Normalise text a person types before
+`make_base_digest_from_text`: `QString::normalized(QString::NormalizationForm_C)` in Qt,
+`icu::Normalizer2::getNFCInstance()` with ICU.
+
 ## 2. The three steps and what to cache
 
 ```
